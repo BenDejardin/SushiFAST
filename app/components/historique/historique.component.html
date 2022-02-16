@@ -1,0 +1,57 @@
+<app-header></app-header>
+<section class="section">
+    <div class="container">
+        <div fxflex.gt-xs="30%">
+            <h1 class="title is-3">Historique des commandes</h1>
+
+
+            <div class="commandes">
+                <div class="boxe" *ngFor="let commande of commandes; let index = index">
+                    <hr>
+                    <div class="numCommande">{{commande['numCommande']}}</div>
+
+                    <div class="bouton">
+                        <button class="button is-light" (click)="delete(index)">x</button>&nbsp;
+                        <button class="button is-light" >{{commande['prix']}}0 €</button>&nbsp;
+                        <button class="button is-light" (click)="affModal(index)">+</button>
+                    </div>
+                </div>
+
+                <div class="boxe" *ngIf="commandeVide">
+                    <hr>
+                    <p>Aucune commande disponible.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal is-active" *ngIf="showModal">
+            <div class="detail">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                    <h1 class="title is-3" style="color:azure;">Commande {{numeroCommande}}</h1>
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th>Plateau</th>
+                                <th>Quantite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detail of detailsCommande">
+                                <td>{{detail['nomPlateau']}}</td>
+                                <td>{{detail['quantite']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                    <br>
+                    <button class="button is-primary" (click)="affModal(0)">Fermer</button>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</section>
