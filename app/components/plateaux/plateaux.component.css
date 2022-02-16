@@ -1,0 +1,28 @@
+.plateaux {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    height: auto;
+    margin-left: 30%;
+    position: absolute;
+    top: -2em;
+}
+
+.boxe {
+    width: 30%;
+}
+
+.detail {
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    margin: 0 10em;
+}
+
+.modal-content {
+    width: 30%;
+}
+
+.final {
+    margin-top: 3em;
+}
