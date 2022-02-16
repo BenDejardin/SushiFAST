@@ -1,0 +1,13 @@
+.navbar-brand img {
+    height: 3em;
+}
+nav{
+    padding: 0.5em 2em;
+    background-color: black;
+}
+.navbar-start{
+    padding-left: 1em;
+}
+.navbar-item, .title{
+    color: #fff;
+}

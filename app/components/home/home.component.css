@@ -1,0 +1,8 @@
+img{
+    position: fixed; 
+    top: 4em; 
+    left: 0; 
+    /* Préserve le ratio de l'image */
+    min-width: 100%;
+    min-height: 100%;
+}
