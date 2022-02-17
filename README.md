@@ -1,3 +1,5 @@
+## Informations projet
+
 ### Equipe : Les PaD'IDs
 
  - DEJARDIN Benjamin
@@ -18,6 +20,8 @@
  - Bulma : 0.9.3
  - MongoDB : 4.4.9
  - MongoDB Compass : 1.30.1
+
+<br> <br>
 
 # SushiFAST
 SushiFAST est une mission sous forme de situation professionnelle qui repose sur le développement d'une application **Front-end** avec le framework **Angular**.
