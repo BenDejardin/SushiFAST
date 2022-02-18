@@ -90,14 +90,14 @@ Nous avons représenté nos 3 couches Web avec les différentes requêtes entre 
 ```typescript
 
 interface ItemPanier {
-	nomBoxe : string,
-	quantite : number
+  nomBoxe : string,
+  quantite : number
 }
 
 export interface Panier {
-	numCommande : number,
-	listeBoxes : ItemPanier[],
-	prix : number
+   numCommande : number,
+   listeBoxes : ItemPanier[],
+     prix : number
 }
 
 ```
@@ -147,9 +147,9 @@ Au lancement de l'application le serveur arrivera sur cette page d'accueil.
 *plateaux.component.ts*
 ```typescript
 fetchBoxes() {
-	return this.crudService.getBoxes().subscribe((data: {}) => {
-		this.Boxes = data; 
-	})
+   return this.crudService.getBoxes().subscribe((data: {}) => {
+        this.Boxes = data; 
+   })
 }
 ```
 Nous récupérons les informations depuis la classe CrudServices qui appelle l'ensemble des boxes grâce à l'API et ont le place dans la variable Boxes.
@@ -157,16 +157,16 @@ Nous récupérons les informations depuis la classe CrudServices qui appelle l'e
 *plateaux.component.html*
 ```html
 <div  class="plateaux">
-	<div  class="boxe"  *ngFor="let item of Boxes; let index = index">
-		<hr>
-		<div  class="has-text-centered">{{item.nom}}</div>
-		<img  [src]="'../../../assets/images/'+item.image+'.webp'"><br>
+   <div  class="boxe"  *ngFor="let item of Boxes; let index = index">
+	   <hr>
+	     <div  class="has-text-centered">{{item.nom}}</div>
+	     <img  [src]="'../../../assets/images/'+item.image+'.webp'"><br>
 
-		<div  class="has-text-centered">
-			<button  class="button is-light"  (click)="moins(index)">-</button>&nbsp;
-			<button  class="button is-light"  (click)="affModal(index)">Détails</button>&nbsp;
-			<button  class="button is-light"  (click)="plus(index)">+</button>
-		</div>
+	     <div  class="has-text-centered">
+		     <button  class="button is-light"  (click)="moins(index)">-</button>&nbsp;
+		     <button  class="button is-light"  (click)="affModal(index)">Détails</button>&nbsp;
+		     <button  class="button is-light"  (click)="plus(index)">+</button>
+	     </div>
 	</div>
 </div>
 ```
