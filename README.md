@@ -1,4 +1,3 @@
-
 ### Equipe : Les PaD'IDs
 
   
@@ -103,16 +102,48 @@ export interface Panier {
 
 ```
 ## Phase 2 : Code source + UI
-#### ACCUEIL
+### Script pour la connexion à l'API
+```typescript
+const  urlrest = 'http://localhost:3000';
+@Injectable({
+providedIn:  'root'
+})
+
+export  class  CrudService {
+constructor(private  http: HttpClient) { }
+httpHeader = {
+  headers:  new  HttpHeaders({
+    'Content-Type':  'application/json'
+  })
+}
+getBoxes(): Observable<any> {
+  return  this.http.get<any>(urlrest + '/boxes').pipe(
+    catchError(this.handleError)
+  );
+}
+
+private  handleError(error: HttpErrorResponse): any {
+  if (error.error  instanceof  ErrorEvent) {
+    console.error('An error occurred:', error.error.message);
+  } else {
+    console.error(
+    `Backend returned code ${error.status}, ` +
+    `body was: ${error.error}`);
+  }
+  return  throwError(() =>  'Something bad happened; please try again later.');
+}
+}
+```
+### ACCUEIL
   ![enter image description here](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/menu.PNG?raw=true)
 Au lancement de l'application le serveur arrivera sur cette page d'accueil.     
 
-#### COMMANDE
+### COMMANDE
 
 ![enter image description here](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/Commande%20v.PNG?raw=true)
   
-#### Affichage des boxes
-##### Code
+### Affichage des boxes
+#### Code
 *plateaux.component.ts*
 ```typescript
 fetchBoxes() {
@@ -139,18 +170,12 @@ Nous récupérons les informations depuis la classe CrudServices qui appelle l'e
 	</div>
 </div>
 ```
- ##### Liste des boxes : 
+ #### Liste des boxes : 
 ![](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/rectangle.jpg?raw=true)
-
-Lors de la commande le serveur peut ajouter ou supprimer 1 boxe à l'aide des bouton + - qui sera directement actualiser dans la commande. 
-#### Affichage de la commande
-![enter image description here](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/rectangle2.jpg?raw=true)
-
-##### Détails
-Le serveur pourra également accéder au détail de la boxes en appuyant sur le bouton détail.
+#### Détails
+Le serveur peut accéder au détail de la boxes en appuyant sur le bouton détail.
 
 ![enter image description here](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/detail%20box.PNG?raw=true)
-
 Un modale s'active après appuie de se bouton
 
 ##### Changement de l’état du modal : 
@@ -198,17 +223,141 @@ affModal(i: number) {
 	</div>
 </div>
 ```
+Lors de la commande le serveur peut également ajouter ou supprimer une boxe à l'aide des bouton + - qui sera directement actualiser dans la commande. 
+#### Affichage de la commande
+![enter image description here](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/rectangle2.jpg?raw=true)
+#### Script Bouton + 
+```typescript
+plus(index: number) {
+const  nomsDeBoxesCommandees = this.commande.map(value  =>  value.nomPlateau);
+const  panier: any | Map<string, number> = new  Map();
+
+nomsDeBoxesCommandees.forEach(nomDeBoxeCommandee  => (panier.set(nomDeBoxeCommandee, (panier.get(nomDeBoxeCommandee) || 0) + 1)))
+
+if (panier.get(this.Boxes[index].nom) == 1) {
+	for (let  i = 0; i < this.commande.length; i++) {
+		if (this.commande[i].nomPlateau == this.Boxes[index].nom) {
+		this.commande[i].quantite++;
+		this.commande[i].prix = this.commande[i].quantite * this.Boxes[index].prix;
+		this.commande[i].prix = Math.round(1000 * this.commande[i].prix) / 1000;
+		}
+	}
+}
+
+else {
+	// On donne un numero de commande aléatoire entre 1 et 99 
+	let  numCommande = Math.floor(Math.random() * (99 + 1));
+	
+	let  uneLigne = new  LigneCommande(numCommande, this.Boxes[index].nom, 1, this.Boxes[index].prix);
+
+	this.commande.push(uneLigne);
+}
+
+this.totalCommande = (this.totalCommande + this.Boxes[index].prix);
+
+// On arrondi la prix de la commande 
+this.totalCommande = Math.round(1000 * this.totalCommande) / 1000;
+}
+```
+#### Script Bouton - 
+
+```typescript
+moins(index: number) {
+const  nomsDeBoxesCommandees = this.commande.map(value  =>  value.nomPlateau);
+
+const  panier: any | Map<string, number> = new  Map();
+
+nomsDeBoxesCommandees.forEach(nomDeBoxeCommandee  => (panier.set(nomDeBoxeCommandee, (panier.get(nomDeBoxeCommandee) || 0) + 1)))
+
+if (panier.get(this.Boxes[index].nom) == 1) {
+	for (let  i = 0; i < this.commande.length; i++) {
+		if (this.commande[i].nomPlateau == this.Boxes[index].nom && this.commande[i].quantite > 0) {
+
+			this.commande[i].quantite--;
+
+			this.commande[i].prix = this.commande[i].quantite * this.Boxes[index].prix;
+			// Arrondi le prix
+			this.commande[i].prix = Math.round(1000 * this.commande[i].prix) / 1000;
+		}
+		
+		// si il n'y a plus de cette boxes alors ont le supp de la liste 
+		if (this.commande[i].quantite == 0) {
+			this.commande.splice(i, 1);
+		}
+	}
+
+	this.totalCommande = this.totalCommande - this.Boxes[index].prix;
+	
+	// On arrondi le prix total de la commande
+	this.totalCommande = Math.round(1000 * this.totalCommande) / 1000;
+}
+}
+```
+
 
 #### ENREGISTREMENT DES DONNÉES DANS LE LOCAL STORAGE
 
 ```typescript 
-Benjamin mettra plus tard
+finalisation() { 
+this.totalCommande =
+Md5.hashStr(this.totalCommande); // Hashage du prix 
+
+for (let  i = 0; i < this.commande.length; i++) {
+	this.details.push(new  Detail(this.commande[i].nomPlateau, this.commande[i].quantite));
+}
+let  uneCommande = new  Commandes(this.commande[0].numCommande, this.totalCommande, this.details)
+
+// Renitialisation de la commande
+this.commande = [];
+this.details = [];
+this.totalCommande = 0;
+
+this.commandes.push(uneCommande);
+
+let  tabItems = JSON.stringify(this.commandes);
+
+// Envoi dans le localStorage
+localStorage.setItem('Commandes', tabItems);
+}
 ```
 ![enter image description here](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/localstorage.PNG?raw=true)
+### Historique des commandes
+Lors du passage en caisse le serveur se dirige dans l'historique des commandes et encaisse la somme correspondant au numéro de commande.     
 
-##### Détails de commande 
+![enter image description here](https://raw.githubusercontent.com/BenDejardin/SushiFAST/main/imageReadme/h%20des%20commandes.PNG)
+Le serveur aura la possibilité de consulter le contenu de la commande en appuyant sur le bouton + 
+
+#### Détails de commande 
 
 ![enter image description here](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/detail%20commande.PNG?raw=true)
+Une fois le client servit, le serveur doit supprimer la commande de l'historique grâce au bouton x.
+
+#### Script pour récupérer la liste des commandes
+
+```typescript
+this.commandes = JSON.parse(String(localStorage.getItem("Commandes")));
+```
+
+#### Script pour supprimer une commande 
+
+```typescript
+delete(index: number){
+// récupération des commandes
+let  arrayDataCommande = JSON.parse(String(localStorage.getItem("Commandes")));
+
+// Suppression de la commande dans le tableau
+arrayDataCommande.splice(index, 1);
+
+// Ajout du tableau sans la commande supprimer dans le localStorage
+localStorage.setItem('Commandes', JSON.stringify(arrayDataCommande));
+
+this.commandes = arrayDataCommande;
+
+}
+```
+
+### RGPD 
+![rgpd.PNG](https://github.com/BenDejardin/SushiFAST/blob/main/imageReadme/rgpd.PNG?raw=true)
 
 ## Phase 3 : Evil User 
               
