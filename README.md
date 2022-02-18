@@ -182,45 +182,45 @@ Un modale s'active après appuie de se bouton
 *plateaux.component.ts*
 ```typescript
 affModal(i: number) {
-	if (this.showModal) {
-		this.showModal = false;
-	} else {
-		this.boxe = this.Boxes[i];
-		this.showModal = true;
-	}
+  if (this.showModal) {
+    this.showModal = false;
+ }else {
+    this.boxe = this.Boxes[i];
+    this.showModal = true
+ }
 }
 ```
 *plateaux.component.html*
 ```html
 <div  class="modal is-active"  *ngIf="showModal">
-	<div  class="detail">
-		<div  class="modal-background"></div>
-		<div  class="modal-content">
-			<h1  class="title is-3"  style="color:azure;">{{boxe.nom}}</h1>
+  <div  class="detail">
+    <div  class="modal-background"></div>
+    <div  class="modal-content">
+	<h1  class="title is-3"  style="color:azure;">{{boxe.nom}}</h1>
 
-			<img  [src]="'../../../assets/images/'+boxe.image+'.webp'">
-			<br>
+	<img  [src]="'../../../assets/images/'+boxe.image+'.webp'">
+	<br>
 
-			<br>
-			<button  class="button is-primary"  (click)="affModal(0)">Fermer</button>
-		</div>
-		<div  class="modal-content">
-			<h1  class="title is-3"  style="color:azure;">Composition</h1>
-			<div  *ngFor="let compo of boxe.composition">
-				<p  style="color:azure;">{{compo.quantite}} {{compo.nom}}</p>
-			</div>
-			<br>
-			<p  style="color:azure; font-weight: bold;">Nombre de pièces : {{boxe.pieces}}</p>
-		</div>
-		<div  class="modal-content">
-			<h1  class="title is-3"  style="color:azure;">Saveurs</h1>
-			<div  *ngFor="let saveur of boxe.saveurs">
-				<p  style="color:azure;">{{saveur}}</p>
-			</div>
-			<br>
-			<p  style="color:azure; font-weight: bold;">Prix : {{boxe.prix}}€</p>
-		</div>
+	<br>
+	<button  class="button is-primary"  (click)="affModal(0)">Fermer</button>
+    </div>
+    <div  class="modal-content">
+	<h1  class="title is-3"  style="color:azure;">Composition</h1>
+	<div  *ngFor="let compo of boxe.composition">
+		<p  style="color:azure;">{{compo.quantite}} {{compo.nom}}</p>
 	</div>
+	<br>
+	<p  style="color:azure; font-weight: bold;">Nombre de pièces : {{boxe.pieces}}</p>
+    </div>
+    <div  class="modal-content">
+	<h1  class="title is-3"  style="color:azure;">Saveurs</h1>
+	<div  *ngFor="let saveur of boxe.saveurs">
+	        <p  style="color:azure;">{{saveur}}</p>
+	</div>
+	<br>
+		<p  style="color:azure; font-weight: bold;">Prix : {{boxe.prix}}€</p>
+    </div>
+  </div>
 </div>
 ```
 Lors de la commande le serveur peut également ajouter ou supprimer une boxe à l'aide des bouton + - qui sera directement actualiser dans la commande. 
@@ -235,22 +235,22 @@ const  panier: any | Map<string, number> = new  Map();
 nomsDeBoxesCommandees.forEach(nomDeBoxeCommandee  => (panier.set(nomDeBoxeCommandee, (panier.get(nomDeBoxeCommandee) || 0) + 1)))
 
 if (panier.get(this.Boxes[index].nom) == 1) {
-	for (let  i = 0; i < this.commande.length; i++) {
-		if (this.commande[i].nomPlateau == this.Boxes[index].nom) {
-		this.commande[i].quantite++;
-		this.commande[i].prix = this.commande[i].quantite * this.Boxes[index].prix;
-		this.commande[i].prix = Math.round(1000 * this.commande[i].prix) / 1000;
-		}
-	}
+  for (let  i = 0; i < this.commande.length; i++) {
+	if (this.commande[i].nomPlateau == this.Boxes[index].nom) {
+	this.commande[i].quantite++;
+	this.commande[i].prix = this.commande[i].quantite * this.Boxes[index].prix;
+	this.commande[i].prix = Math.round(1000 * this.commande[i].prix) / 1000;
+        }
+  }
 }
 
 else {
-	// On donne un numero de commande aléatoire entre 1 et 99 
-	let  numCommande = Math.floor(Math.random() * (99 + 1));
+  // On donne un numero de commande aléatoire entre 1 et 99 
+  let  numCommande = Math.floor(Math.random() * (99 + 1));
 	
-	let  uneLigne = new  LigneCommande(numCommande, this.Boxes[index].nom, 1, this.Boxes[index].prix);
+  let  uneLigne = new  LigneCommande(numCommande, this.Boxes[index].nom, 1, this.Boxes[index].prix);
 
-	this.commande.push(uneLigne);
+  this.commande.push(uneLigne);
 }
 
 this.totalCommande = (this.totalCommande + this.Boxes[index].prix);
@@ -270,26 +270,26 @@ const  panier: any | Map<string, number> = new  Map();
 nomsDeBoxesCommandees.forEach(nomDeBoxeCommandee  => (panier.set(nomDeBoxeCommandee, (panier.get(nomDeBoxeCommandee) || 0) + 1)))
 
 if (panier.get(this.Boxes[index].nom) == 1) {
-	for (let  i = 0; i < this.commande.length; i++) {
-		if (this.commande[i].nomPlateau == this.Boxes[index].nom && this.commande[i].quantite > 0) {
+  for (let  i = 0; i < this.commande.length; i++) {
+	if (this.commande[i].nomPlateau == this.Boxes[index].nom && this.commande[i].quantite > 0) {
 
-			this.commande[i].quantite--;
+	  this.commande[i].quantite--;
 
-			this.commande[i].prix = this.commande[i].quantite * this.Boxes[index].prix;
-			// Arrondi le prix
-			this.commande[i].prix = Math.round(1000 * this.commande[i].prix) / 1000;
-		}
-		
-		// si il n'y a plus de cette boxes alors ont le supp de la liste 
-		if (this.commande[i].quantite == 0) {
-			this.commande.splice(i, 1);
-		}
+	  this.commande[i].prix = this.commande[i].quantite * this.Boxes[index].prix;
+	  // Arrondi le prix
+	  this.commande[i].prix = Math.round(1000 * this.commande[i].prix) / 1000;
 	}
+		
+	// si il n'y a plus de cette boxes alors ont le supp de la liste 
+	if (this.commande[i].quantite == 0) {
+	  this.commande.splice(i, 1);
+	}
+  }
 
-	this.totalCommande = this.totalCommande - this.Boxes[index].prix;
+  this.totalCommande = this.totalCommande - this.Boxes[index].prix;
 	
-	// On arrondi le prix total de la commande
-	this.totalCommande = Math.round(1000 * this.totalCommande) / 1000;
+  // On arrondi le prix total de la commande
+  this.totalCommande = Math.round(1000 * this.totalCommande) / 1000;
 }
 }
 ```
@@ -303,7 +303,7 @@ this.totalCommande =
 Md5.hashStr(this.totalCommande); // Hashage du prix 
 
 for (let  i = 0; i < this.commande.length; i++) {
-	this.details.push(new  Detail(this.commande[i].nomPlateau, this.commande[i].quantite));
+  this.details.push(new  Detail(this.commande[i].nomPlateau, this.commande[i].quantite));
 }
 let  uneCommande = new  Commandes(this.commande[0].numCommande, this.totalCommande, this.details)
 
